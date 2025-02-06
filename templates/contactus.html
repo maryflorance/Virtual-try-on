@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/camera">Try On</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="contactInfo">
+            <h2>Contact Information</h2>
+            <ul>
+                <li><strong>Email:</strong> virtualshoppingplaza@gmail.com</li>
+                <li><strong>Phone:</strong> +1 9705876566</li>
+                <li><strong>Address:</strong> 2-302, Vinjanampadu, Guntur, India</li>
+            </ul>
+        </section>
+        <section id="contactForm">
+            <h2>Contact Form</h2>
+            <form id="messageForm">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" required><br>
+
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" required><br>
+
+                <label for="message">Your Message:</label>
+                <textarea id="message" rows="4" required></textarea><br>
+
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

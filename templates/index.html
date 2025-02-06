@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try On</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .hero {
+            background-image: linear-gradient(to bottom, #ff69b4, #ffa07a);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            animation: fadeIn 2s;
+        }
+        .section {
+            padding: 20px;
+        }
+        .measurements {
+            font-size: 18px;
+        }
+        
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            perspective: 1000px;
+        }
+        
+        .image {
+            position: absolute;
+            width: 100px;
+            height: 150px;
+            border-radius: 10px;
+            transition: transform 0.5s;
+            animation: moveIn 2s;
+        }
+        
+        .image1 {
+            top: 25px;
+            left: 20%;
+            background-image: url('https://via.placeholder.com/100x150');
+            background-size: cover;
+            animation: spin 10s linear infinite;
+        }
+        
+        .image2 {
+            top: 25px;
+            left: 40%;
+            background-image: url('https://via.placeholder.com/100x150');
+            background-size: cover;
+            animation: spin 10s linear 2s infinite;
+        }
+        
+        .image3 {
+            top: 25px;
+            left: 60%;
+            background-image: url('https://via.placeholder.com/100x150');
+            background-size: cover;
+            animation: spin 10s linear 4s infinite;
+        }
+        
+        .image4 {
+            top: 25px;
+            left: 80%;
+            background-image: url('https://via.placeholder.com/100x150');
+            background-size: cover;
+            animation: spin 10s linear 6s infinite;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes moveIn {
+            0% {
+                transform: translateX(-100px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 30%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            animation: zoomIn 2s;
+        }
+        
+        .video-container iframe, .video-container object, .video-container embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        @keyframes zoomIn {
+            0% {
+                transform: scale(0.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .comments {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            animation: slideIn 2s;
+        }
+        
+        @keyframes slideIn {
+            0% {
+                transform: translateX(100px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+        
+        .comment {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .comment-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .comment-date {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .comment-text {
+            font-size: 16px;
+        }
+        
+        #map {
+            height: 400px;
+            width: 100%;
+            border: 1px solid #ddd;
+        }
+        
+        .navbar {
+            animation: slideDown 2s;
+        }
+        
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-100px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .footer-section {
+            display: inline-block;
+            margin: 20px;
+        }
+        
+        .footer-link {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Virtual Try On</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Video">Video</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#QAndA">Q&A's</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contactUs">Contact Us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Signin/Signup
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="signin.html">Signin</a></li>
+                            <li><a class="dropdown-item" href="signup.html">Signup</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="hero">
+        <h1>Virtual Try On</h1>
+        <p>Try on virtual outfits and experience the future of fashion.</p>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#learnMore">
+            Learn More
+        </button>
+    </div>
+    <section id="about" class="about-section">
+    <div class="about-container">
+        <h2>About Us</h2>
+        <p class="about-intro">
+            Welcome to <strong>Virtual Shopping Plaza</strong>, where online shopping meets cutting-edge technology!
+            We bring you a <span class="highlight">3D immersive shopping experience</span>, allowing real-time product interactions, AI assistance, and VR-enabled navigation.
+        </p>
+
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>Our Vision</h3>
+                <p>To revolutionize e-commerce by creating a seamless, immersive, and engaging virtual shopping experience.</p>
+            </div>
+            <div class="about-card">
+                <h3>Our Mission</h3>
+                <p>To leverage advanced technology—VR, AI, and Blockchain—to make online shopping as real as in-store visits.</p>
+            </div>
+            <div class="about-card">
+                <h3>What Makes Us Unique?</h3>
+                <ul>
+                    <li>🛍️ <strong>3D Virtual Store Navigation</strong> – Explore stores like never before.</li>
+                    <li>👗 <strong>AI-Powered Size & Fit Assistance</strong> – Get perfect recommendations.</li>
+                    <li>🔍 <strong>360° Product View</strong> – See every detail before buying.</li>
+                    <li>🔒 <strong>Blockchain Payments</strong> – Secure and transparent transactions.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="story">
+            <h3>Our Story</h3>
+            <p>The idea for Virtual Shopping Plaza was born out of frustration with traditional online shopping—clothes that don’t fit,
+                furniture that looks different in real life, and a lack of trial experiences. We set out to change this by combining <strong>AI, AR, and VR</strong> to create
+                a shopping experience that truly replicates the in-store feel.</p>
+        </div>
+
+        
+</section>
+
+<style>
+    .about-section {
+        padding: 60px 20px;
+        background: #ffffff;
+        text-align: center;
+    }
+    .about-container {
+        max-width: 1100px;
+        margin: auto;
+    }
+    .about-intro {
+        font-size: 18px;
+        color: #444;
+        margin-bottom: 30px;
+    }
+    .highlight {
+        color: #f39c12;
+        font-weight: bold;
+    }
+    .about-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+    .about-card {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    .about-card:hover {
+        transform: translateY(-5px);
+    }
+    .about-card h3 {
+        color: #343a40;
+        margin-bottom: 10px;
+    }
+    .about-card ul {
+        text-align: left;
+        padding: 0;
+        list-style: none;
+    }
+    .about-card li {
+        margin: 5px 0;
+    }
+    .story, .testimonials, .contact {
+        margin-top: 30px;
+    }
+    .testimonials .comment {
+        background: #f8f9fa;
+        padding: 15px;
+        margin: 10px auto;
+        border-radius: 8px;
+        max-width: 600px;
+        transition: 0.3s;
+    }
+    .testimonials .comment:hover {
+        background: #e9ecef;
+    }
+    .contact a {
+        color: #f39c12;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .contact a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.1/gsap.min.js"></script>
+<script>
+    gsap.from(".about-container h2", { opacity: 0, y: -30, duration: 1 });
+    gsap.from(".about-intro", { opacity: 0, x: -30, duration: 1, delay: 0.5 });
+    gsap.from(".about-card", { opacity: 0, scale: 0.8, stagger: 0.2, duration: 1 });
+    gsap.from(".story", { opacity: 0, y: 30, duration: 1, delay: 0.5 });
+    gsap.from(".testimonials .comment", { opacity: 0, scale: 0.9, stagger: 0.2, duration: 1 });
+</script>
+
+    <section id="Video" class="section">
+        <h2>Video</h2>
+        <video class="img-fluid rounded shadow animate-card" autoplay muted loop controls onerror="this.onerror=null; this.src='fallback.mp4'">
+    <source src="final vr video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+    </section>
+    <section id="QAndA" class="section">
+        <h2>Q&A's</h2>
+        <p>Here are some frequently asked questions about our products and services.</p>
+        <ul>
+            <li>Q: How do I use the virtual try-on feature?</li>
+            <li>A: Simply click on the "Try On" button and follow the instructions.</li>
+            <li>Q: What if I don't like the product after trying it on?</li>
+            <li>A: You can return the product within 30 days of purchase.</li>
+        </ul>
+    </section>
+    <section class="section">
+        <h2>Comments</h2>
+        <div class="comments">
+            <div class="comment">
+                <div class="comment-name">John Doe</div>
+                <div class="comment-date">2022-01-01</div>
+                <div class="comment-text">This product is amazing! The virtual try-on feature is so cool.</div>
+            </div>
+            <div class="comment">
+                <div class="comment-name">Jane Doe</div>
+                <div class="comment-date">2022-01-05</div>
+                <div class="comment-text">I love this product! The quality is great and the price is reasonable.</div>
+            </div>
+            <form>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Comment:</label>
+                    <textarea class="form-control" id="comment" rows="3" placeholder="Enter your comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </section>
+    <section id="contactUs" class="section">
+        <h2>Contact Us</h2>
+        <p>Get in touch with us to learn more about our products and services.</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Address</h3>
+                <p>123 Main St, New York, NY 10001</p>
+                <h3>Phone</h3>
+                <p>(123) 456-7890</p>
+                <h3>Email</h3>
+                <p>info@example.com</p>
+            </div>
+            <div class="col-md-6">
+                <h3>Contact Form</h3>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message:</label>
+                        <textarea class="form-control" id="message" rows="3" placeholder="Enter your message"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Location</h3>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.0939423327555!2d-73.98512968448564!3d40.75889597933064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25995a6d21dd7%3A0x59f75b7fffb28e0!2s123%20Main%20St%2C%20New%20York%2C%20NY%2010001!5e0!3m2!1sen!2sus!4v1669097231148!5m2!1sen!2sus" width="100%" height="400" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="learnMore" tabindex="-1" aria-labelledby="learnMoreLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="learnMoreLabel">Learn More</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Virtual Try On is a revolutionary new way to shop and experience fashion. Try on virtual outfits and discover new styles and trends.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>About Us</h3>
+                    <p>Virtual Try On is a fashion technology company that provides a virtual try-on experience for customers. Our mission is to make fashion more accessible and fun for everyone.</p>
+                    <h3>Useful Links</h3>
+                    <ul>
+                        <li><a href="#aboutUs" class="footer-link">About Us</a></li>
+                        <li><a href="#products" class="footer-link">Products</a></li>
+                        <li><a href="#professionalQAndA" class="footer-link">Professional Q&A's</a></li>
+                        <li><a href="#contactUs" class="footer-link">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#" class="footer-link">Facebook</a></li>
+                        <li><a href="#" class="footer-link">Twitter</a></li>
+                        <li><a href="#" class="footer-link">Instagram</a></li>
+                        <li><a href="#" class="footer-link">LinkedIn</a></li>
+                    </ul>
+                    <h3>Newsletter</h3>
+                    <p>Sign up for our newsletter to stay up-to-date on the latest news and trends in fashion technology.</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <p>&copy; 2023 Virtual Try On. All rights reserved.</p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>

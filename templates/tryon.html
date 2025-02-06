@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Try-On</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        #video-container {
+            position: relative;
+            display: inline-block;
+        }
+        video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+        #overlay-dress {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            opacity: 0.8;
+            pointer-events: none; /* So it does not interfere with user interactions */
+        }
+        #canvas {
+            display: none;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        #captured-image {
+            margin-top: 20px;
+            max-width: 400px;
+            display: none;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Virtual Try-On</h1>
+    
+    <div id="video-container">
+        <video id="video" autoplay></video>
+        <img id="overlay-dress" src="dress.jpg" alt="Dress Overlay"> <!-- Replace with actual dress PNG -->
+    </div>
+
+    <button class="btn" id="capture">Take Picture</button>
+
+    <canvas id="canvas"></canvas>
+    <img id="captured-image">
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const captureButton = document.getElementById('capture');
+        const capturedImage = document.getElementById('captured-image');
+        const dressOverlay = document.getElementById('overlay-dress');
+
+        // Start webcam stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing webcam:", err);
+            });
+
+        // Capture image with overlay
+        captureButton.addEventListener('click', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Draw webcam feed
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Draw dress overlay
+            const dressImg = new Image();
+            dressImg.src = dressOverlay.src;
+            dressImg.onload = () => {
+                const dressWidth = dressOverlay.width * (canvas.width / video.clientWidth);
+                const dressHeight = dressOverlay.height * (canvas.height / video.clientHeight);
+                const dressX = (canvas.width / 2) - (dressWidth / 2);
+                const dressY = (canvas.height * 0.3); // Adjust as needed
+
+                ctx.drawImage(dressImg, dressX, dressY, dressWidth, dressHeight);
+
+                // Show captured image
+                capturedImage.src = canvas.toDataURL('image/png');
+                capturedImage.style.display = "block";
+            };
+        });
+    </script>
+
+</body>
+</html>

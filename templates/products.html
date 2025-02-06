@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <title>Products</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .nav-bar {
+            background-color: #333;
+            padding: 1rem;
+            text-align: center;
+        }
+        .nav-bar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+        .nav-bar li {
+            margin-right: 20px;
+        }
+        .nav-bar a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .nav-bar a:hover {
+            color: #ccc;
+        }
+        .dress-card {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .dress-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        .add-to-cart, .try-on {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .add-to-cart:hover, .try-on:hover {
+            background-color: #555;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 500px;
+        }
+        .modal-content img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Virtual Try On</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="dress-card">
+                    <h2>Dress 1</h2>
+                    <img src="dress.jpg" alt="Dress 1">
+                    <p>Price: $50</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                    <!-- Assuming the Dress 2 has an ID to differentiate it from other dresses -->
+<button onclick="window.location.href='tryon.html?dress=dress'">Try On</button>
+
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="dress-card">
+                    <h2>Dress 2</h2>
+                    <img src="dress2.jpg" alt="Dress 2">
+                    <p>Price: $60</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                    <button onclick="window.location.href='tryon.html?dress=dress2'">Try On</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="dress-card">
+                    <h2>Dress 3</h2>
+                    <img src="dress3.jpg" alt="Dress 3">
+                    <p>Price: $70</p>
+                    <button class="add-to-cart">Add to Cart</button>
+                    <button onclick="window.location.href='tryon.html?dress=dress3'">Try On</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+              <div class="dress-card">
+                  <h2>Dress 3</h2>
+                  <img src="dress4.jpg" alt="Dress 3">
+                  <p>Price: $70</p>
+                  <button class="add-to-cart">Add to Cart</button>
+                  <button onclick="window.location.href='tryon.html?dress=dress4'">Try On</button>
+              </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <img src="" alt="" id="modal-image">
+            <p id="modal-description"></p>
+            <button class="add-to-cart" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function openModal(dress) {
+            document.getElementById('modal').style.display = 'block';
+            if (dress === 'dress1') {
+                document.getElementById('modal-image').src = 'https://via.placeholder.com/200x200';
+                document.getElementById('modal-description').innerHTML = 'This is dress 1';
+            } else if (dress === 'dress2') {
+                document.getElementById('modal-image').src = 'https://via.placeholder.com/200x200';
+                document.getElementById('modal-description').innerHTML = 'This is dress 2';
+            } else if (dress === 'dress3') {
+                document.getElementById('modal-image').src = 'https://via.placeholder.com/200x200';
+                document.getElementById('modal-description').innerHTML = 'This is dress 3';
+            }
+        }
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
